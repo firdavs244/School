@@ -1,0 +1,64 @@
+# ==========================================
+# DOCKER COMPOSE - Universal (Dev + Codespaces)
+# ==========================================
+# Ishlatish: docker compose up --build
+# Har qanday muhitda ishlaydi - lokal va Codespaces
+# ==========================================
+
+services:
+  # ============ BACKEND ============
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: school-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Hammasi default qiymatlar bilan - .env kerak emas
+      - DATABASE_URL=sqlite:///./school.db
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-not-for-production}
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - ENVIRONMENT=development
+      # CORS - barcha originlarni qabul qilish (dev uchun)
+      - CORS_ORIGINS=*
+    volumes:
+      - ./backend/app:/app/app
+      - backend-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - school-network
+
+  # ============ FRONTEND ============
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: school-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - school-network
+
+# ============ NETWORKS ============
+networks:
+  school-network:
+    driver: bridge
+
+# ============ VOLUMES ============
+volumes:
+  backend-data:
+

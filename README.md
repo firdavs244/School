@@ -1,253 +1,221 @@
-# 🎓 Online Maktab - Zamonaviy Ta'lim Platformasi
+# 🎓 Online Maktab - Ta'lim Boshqaruv Tizimi
 
-**Full-Stack web application** - O'quvchilar, o'qituvchilar va administratorlar uchun zamonaviy onlayn ta'lim boshqaruv tizimi.
+Zamonaviy onlayn ta'lim platformasi - kurslar, topshiriqlar va baholarni boshqarish uchun.
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Ant Design](https://img.shields.io/badge/Ant%20Design-0170FE?style=for-the-badge&logo=ant-design&logoColor=white)](https://ant.design/)
-[![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-
-## ✨ Asosiy Xususiyatlar
-
-### 👨‍🎓 O'quvchilar uchun
-- ✅ Kurslarni ko'rish va yozilish
-- ✅ Topshiriqlarni topshirish
-- ✅ Baholar va fikr-mulohazalarni ko'rish
-- ✅ Shaxsiy dashboard
-
-### 👨‍🏫 O'qituvchilar uchun
-- ✅ Kurslar yaratish va boshqarish
-- ✅ Topshiriqlar berish
-- ✅ O'quvchilarni baholash
-- ✅ Topshiriqlarni ko'rib chiqish
-
-### 👨‍💼 Administratorlar uchun
-- ✅ Foydalanuvchilarni boshqarish (CRUD)
-- ✅ Kurslarni boshqarish (CRUD)
-- ✅ Topshiriqlarni boshqarish (CRUD)
-- ✅ Role management
-- ✅ To'liq tizim nazorati
-
-## 🛠️ Texnologiyalar
+## 📋 Texnologiyalar
 
 ### Backend
-- **FastAPI** - Modern Python web framework
+- **FastAPI** - Python web framework
 - **SQLAlchemy** - ORM
 - **SQLite** - Database
-- **Pydantic** - Data validation
-- **JWT** - Authentication
-- **Bcrypt** - Password hashing
-- **Uvicorn** - ASGI server
+- **JWT** - Autentifikatsiya
+- **Bcrypt** - Parol shifrlash
 
 ### Frontend
-- **React 19** - UI library
+- **React 19** - UI framework
+- **Ant Design 6** - UI components
+- **React Router 7** - Routing
 - **Vite** - Build tool
-- **Ant Design** - UI component library
-- **React Router** - Navigation
 
-## 📦 O'rnatish
+### DevOps
+- **Docker & Docker Compose** - Konteynerizatsiya
+- **Nginx** - Reverse proxy
+- **Let's Encrypt** - SSL sertifikatlari
 
-### Talablar
-- Python 3.11+
-- Node.js 18+
-- npm or yarn
+---
 
-### 1. Repository'ni clone qiling
+## 🚀 Tez Boshlash
+
+### Variant 1: GitHub Codespaces (Eng Oson - 1 daqiqa!)
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/yourusername/school)
+
+1. Yuqoridagi tugmani bosing yoki GitHub'da **Code → Codespaces → Create**
+2. Codespace ochilgandan so'ng terminal oching va:
+   ```bash
+   chmod +x start-codespaces.sh && ./start-codespaces.sh
+   ```
+3. **Ports** tabida 5173 port'ni bosing - Frontend ochiladi!
+
+> ✅ Hech qanday `.env` yoki sozlash kerak emas - hammasi avtomatik!
+
+---
+
+### Variant 2: Lokal Docker (Windows/Mac/Linux)
+
 ```bash
-git clone https://github.com/firdavs244/School.git
-cd School
+# 1. Klonlash
+git clone https://github.com/yourusername/school.git
+cd school
+
+# 2. Ishga tushirish (bu 1 buyruq yetarli!)
+docker compose up --build
+
+# 3. Brauzerda ochish:
+# Frontend: http://localhost:5173
+# Backend API: http://localhost:8000/docs
 ```
 
-### 2. Backend Setup
+---
+
+### Variant 3: Docker'siz (Manual)
 
 ```bash
+# Backend
 cd backend
-
-# Virtual environment yarating (Windows)
-python -m venv .
-
-# Activate qiling
-Scripts\activate  # Windows
-
-# Dependencies o'rnating
+python -m venv venv
+venv\Scripts\activate     # Windows
+source venv/bin/activate  # Mac/Linux
 pip install -r requirements.txt
-
-# Database yarating
-python recreate_database.py
-
-# Serverni ishga tushiring
 uvicorn app.main:app --reload
-```
 
-Backend: http://127.0.0.1:8000
-API Docs: http://127.0.0.1:8000/docs
-
-### 3. Frontend Setup
-
-```bash
+# Frontend (yangi terminal)
 cd frontend
-
-# Dependencies o'rnating
 npm install
-
-# Development server
 npm run dev
 ```
 
-Frontend: http://localhost:5173
+---
 
-## 🚀 Tezkor Ishga Tushirish
+## 🌐 Production Deployment
 
-### Windows uchun
+### 1. Server tayyorlash (Ubuntu)
 
-**Backend:**
 ```bash
-cd backend
-START_BACKEND.bat
+sudo apt update && sudo apt install docker.io docker-compose git
+sudo usermod -aG docker $USER
 ```
 
-**Frontend:**
+### 2. Loyihani yuklab olish
+
 ```bash
-cd frontend
-npm run dev
+git clone https://github.com/yourusername/school.git
+cd school
 ```
 
-## 📊 Database Schema
+### 3. Production sozlamalari
 
-### Users
-- id, email, password, full_name, role
-- Roles: `student`, `teacher`, `admin`
+```bash
+# .env.prod yaratish
+cp .env.prod.example .env.prod
+nano .env.prod  # Domeningizni va SECRET_KEY ni o'zgartiring
+```
 
-### Courses
-- id, title, description, teacher_id
+### 4. Nginx konfiguratsiyasini yangilash
 
-### Assignments
-- id, title, description, course_id, due_date
+```bash
+# nginx/nginx.conf da domenni o'zgartiring
+sed -i 's/yourdomain.com/your-actual-domain.com/g' nginx/nginx.conf
+```
 
-### Submissions
-- id, assignment_id, student_id, content, submitted_at
+### 5. Deploy
 
-### Grades
-- id, enrollment_id, submission_id, score, feedback
+```bash
+chmod +x deploy-prod.sh
+./deploy-prod.sh
+```
 
-### Enrollments
-- id, student_id, course_id, enrolled_at
-
-## 🎯 API Endpoints
-
-### Authentication
-- `POST /users/register` - Ro'yxatdan o'tish
-- `POST /users/login` - Kirish
-- `GET /users/me` - Hozirgi foydalanuvchi
-
-### Courses
-- `GET /courses/` - Barcha kurslar
-- `POST /courses/` - Kurs yaratish (Teacher/Admin)
-- `GET /courses/{id}` - Kurs ma'lumotlari
-- `PUT /courses/{id}` - Yangilash (Teacher/Admin)
-- `DELETE /courses/{id}` - O'chirish (Admin)
-
-### Assignments
-- `POST /assignments/` - Topshiriq yaratish (Teacher/Admin)
-- `GET /assignments/course/{id}` - Kurs topshiriqlari
-- `PUT /assignments/{id}` - Yangilash (Teacher/Admin)
-- `DELETE /assignments/{id}` - O'chirish (Admin)
-
-### Submissions
-- `POST /submissions/` - Javob topshirish (Student)
-- `GET /submissions/my-submissions` - Mening javoblarim
-- `GET /submissions/assignment/{id}` - Barcha javoblar (Teacher/Admin)
-
-### Grades
-- `POST /grades/` - Baho berish (Teacher/Admin)
-- `GET /grades/my-grades` - Mening baholarim (Student)
-- `PUT /grades/{id}` - Yangilash (Teacher/Admin)
-
-## 👥 Rollar va Ruxsatlar
-
-### Student (Default)
-- Ro'yxatdan o'tganda avtomatik student roli beriladi
-- Kurslarni ko'rish va yozilish
-- Topshiriqlarni topshirish
-- Baholarni ko'rish
-
-### Teacher
-- Admin tomonidan tayinlanadi
-- Kurslar yaratish
-- Topshiriqlar berish
-- O'quvchilarni baholash
-
-### Admin
-- Admin tomonidan tayinlanadi
-- Barcha funksiyalarga kirish
-- Foydalanuvchilar rolini o'zgartirish
-- To'liq CRUD operatsiyalar
-
-**Eslatma:** Foydalanuvchi ro'yxatdan o'tganda avtomatik **student** roli beriladi. Teacher yoki Admin rolini faqat Admin berishi mumkin.
-
-## 🎨 Dizayn
-
-- **Classic Plus Design** - Professional va zamonaviy
-- **Ant Design Components** - Beautiful UI elements
-- **Responsive** - Mobile, Tablet, Desktop
-- **Gradient Backgrounds** - Modern look
-- **Smooth Animations** - Enhanced UX
-- **Icon-rich Interface** - Professional icons
-- **O'zbek tilida** - 100% localized
+---
 
 ## 📁 Loyiha Strukturasi
 
 ```
-School/
-├── backend/
-│   ├── app/
-│   │   ├── models/        # Database models
-│   │   ├── routers/       # API endpoints
-│   │   ├── schemas/       # Pydantic schemas
-│   │   ├── main.py        # FastAPI application
-│   │   ├── db.py          # Database configuration
-│   │   └── utils.py       # Helper functions
-│   ├── requirements.txt   # Python dependencies
-│   └── START_BACKEND.bat  # Quick start script
+school/
+├── docker-compose.yml          # Development (lokal)
+├── docker-compose.codespaces.yml  # GitHub Codespaces
+├── docker-compose.prod.yml     # Production
+├── start-codespaces.sh         # Codespaces startup
+├── start-dev.sh                # Local dev startup
+├── deploy-prod.sh              # Production deploy
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/    # Reusable components
-│   │   ├── pages/         # Page components
-│   │   ├── services/      # API services
-│   │   ├── App.jsx        # Main application
-│   │   └── index.css      # Global styles
-│   ├── package.json       # Node dependencies
-│   └── vite.config.js     # Vite configuration
+├── backend/                    # FastAPI Backend
+│   ├── Dockerfile
+│   ├── Dockerfile.prod
+│   ├── requirements.txt
+│   └── app/
+│       ├── main.py
+│       ├── models/
+│       ├── routers/
+│       └── schemas/
 │
-└── README.md              # Project documentation
+├── frontend/                   # React Frontend
+│   ├── Dockerfile
+│   ├── Dockerfile.codespaces   # Codespaces uchun (dev server)
+│   ├── Dockerfile.prod
+│   └── src/
+│       ├── api/
+│       ├── components/
+│       ├── pages/
+│       └── styles/
+│
+├── nginx/                      # Reverse Proxy (Production)
+│   └── nginx.conf
+│
+├── .devcontainer/              # VS Code Dev Container
+│   └── devcontainer.json
+│
+└── certbot/                    # SSL Certificates
 ```
-
-## 🔒 Xavfsizlik
-
-- ✅ JWT authentication
-- ✅ Bcrypt password hashing
-- ✅ Role-based access control (RBAC)
-- ✅ CORS protection
-- ✅ SQL injection protection (SQLAlchemy ORM)
-- ✅ Input validation (Pydantic)
-
-## 👨‍💻 Muallif
-
-**Firdavs**
-- GitHub: [@firdavs244](https://github.com/firdavs244)
-- Project: [Online Maktab](https://github.com/firdavs244/School)
-
-## 🙏 Credits
-
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [React](https://reactjs.org/)
-- [Ant Design](https://ant.design/)
-- [Vite](https://vitejs.dev/)
 
 ---
 
-**🇺🇿**
+## 🔧 Foydali Buyruqlar
 
-© 2026 Online Maktab. Barcha huquqlar himoyalangan.
+```bash
+# ============ DEVELOPMENT ============
+docker compose up --build           # Ishga tushirish
+docker compose down                 # To'xtatish
+docker compose logs -f              # Loglar
+
+# ============ CODESPACES ============
+./start-codespaces.sh               # Avtomatik sozlash + ishga tushirish
+
+# ============ PRODUCTION ============
+./deploy-prod.sh                    # To'liq deploy
+docker compose -f docker-compose.prod.yml logs -f  # Loglar
+```
+
+---
+
+## 👤 Foydalanuvchi Rollari
+
+| Rol | Imkoniyatlar |
+|-----|--------------|
+| **Student** | Kurslarga yozilish, topshiriqlar yuborish, baholarni ko'rish |
+| **Teacher** | Kurslar yaratish, topshiriqlar berish, baholar qo'yish |
+| **Admin** | Barcha foydalanuvchi va kurslarni boshqarish |
+
+---
+
+## 🔒 Xavfsizlik
+
+- ✅ JWT token autentifikatsiya
+- ✅ Bcrypt parol shifrlash
+- ✅ CORS himoya
+- ✅ Rate limiting (production)
+- ✅ HTTPS (production)
+- ✅ Security headers
+
+---
+
+## 🐛 Muammolar
+
+### Codespaces'da Frontend ishlamayapti
+- Ports tabida 8000 va 5173 portlar **Public** ekanligini tekshiring
+
+### CORS xatosi
+- Backend `CORS_ORIGINS` environment variable'ni tekshiring
+
+### 401 Unauthorized
+- Token eskirgan - qayta login qiling
+
+---
+
+## 📞 Aloqa
+
+Muammolar yoki takliflar uchun GitHub Issues oching.
+
+---
+
+*Yaratildi: December 2025*
 

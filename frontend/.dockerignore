@@ -1,0 +1,18 @@
+# Docker ignore - Frontend
+node_modules/
+dist/
+build/
+.git/
+.gitignore
+.env
+.env.*
+*.log
+*.md
+!README.md
+.idea/
+.vscode/
+coverage/
+.nyc_output/
+*.tmp
+*.bak
+

@@ -1,0 +1,6 @@
+# Bu papka SSL sertifikatlarni saqlash uchun
+# Hech qachon git'ga push qilmang!
+# Bu papka Let's Encrypt sertifikatlarini saqlash uchun
+# Production'da certbot orqali avtomatik to'ldiriladi
+# Hech qachon git'ga push qilmang!
+

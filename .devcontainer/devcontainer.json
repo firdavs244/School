@@ -1,0 +1,48 @@
+{
+    "name": "Online Maktab Dev",
+
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/app",
+
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+
+    "forwardPorts": [8000, 5173],
+
+    "portsAttributes": {
+        "8000": {
+            "label": "Backend API",
+            "onAutoForward": "notify",
+            "visibility": "public"
+        },
+        "5173": {
+            "label": "Frontend",
+            "onAutoForward": "openBrowser",
+            "visibility": "public"
+        }
+    },
+
+    "postCreateCommand": "chmod +x .devcontainer/post-create.sh && .devcontainer/post-create.sh",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python"
+            }
+        }
+    },
+
+    "remoteEnv": {
+        "VITE_API_URL": "https://${localEnv:CODESPACE_NAME}-8000.app.github.dev",
+        "CORS_ORIGINS": "https://${localEnv:CODESPACE_NAME}-5173.app.github.dev,https://${localEnv:CODESPACE_NAME}-8000.app.github.dev"
+    }
+}
+

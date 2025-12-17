@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import user, course, enrollment, assignment, submission, grade
@@ -10,14 +11,19 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS Configuration - MUST be before route includes
+# CORS Configuration - environment'dan olish
+cors_origins_str = os.getenv("CORS_ORIGINS", "*")
+
+# Agar "*" bo'lsa, barcha originlarni qabul qilish
+if cors_origins_str == "*":
+    cors_origins = ["*"]
+else:
+    cors_origins = [origin.strip() for origin in cors_origins_str.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:8000",
-    ],
-    allow_credentials=True,
+    allow_origins=cors_origins,
+    allow_credentials=True if cors_origins != ["*"] else False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -35,8 +41,14 @@ def read_root():
     return {
         'message': 'Online Maktab API',
         'version': '1.0.0',
-        'status': 'active'
+        'status': 'active',
+        'environment': os.getenv("ENVIRONMENT", "development")
     }
+
+@app.get('/health', tags=["Health"])
+def health_check():
+    return {'status': 'healthy'}
 
 # Create all database tables
 Base.metadata.create_all(bind=engine)
+
