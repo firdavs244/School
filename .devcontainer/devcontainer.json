@@ -1,9 +1,11 @@
 {
     "name": "Online Maktab Dev",
 
-    "dockerComposeFile": "../docker-compose.yml",
+    "dockerComposeFile": [
+        "../docker-compose.codespaces.yml"
+    ],
     "service": "backend",
-    "workspaceFolder": "/app",
+    "workspaceFolder": "/workspace",
 
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {}
@@ -45,4 +47,3 @@
         "CORS_ORIGINS": "https://${localEnv:CODESPACE_NAME}-5173.app.github.dev,https://${localEnv:CODESPACE_NAME}-8000.app.github.dev"
     }
 }
-

@@ -32,10 +32,18 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 ENVIRONMENT=development
 EOF
 
-    echo "[INFO] .env file created"
+    echo "[SUCCESS] Environment configured for Codespaces"
 else
-    echo "[INFO] Not running in Codespaces, using defaults"
+    echo "[INFO] Running locally"
 fi
 
-echo "[INFO] Setup complete!"
-
+echo ""
+echo "=========================================="
+echo "  Setup Complete!"
+echo "=========================================="
+echo ""
+echo "Frontend: http://localhost:5173"
+echo "Backend:  http://localhost:8000"
+echo "API Docs: http://localhost:8000/docs"
+echo ""
+echo "=========================================="
