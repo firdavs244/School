@@ -46,7 +46,9 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:8000
+      # Codespaces'da VITE_API_URL bo'sh qoldiriladi
+      # client.js avtomatik to'g'ri URL ni aniqlaydi
+      - VITE_API_URL=
     volumes:
       - ./frontend:/app
       - /app/node_modules
