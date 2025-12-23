@@ -1,36 +1,33 @@
 // API Client - Barcha so'rovlar uchun asosiy funksiyalar
 
 // API manzilini aniqlash
-// 1. Environment variable (VITE_API_URL)
-// 2. Window API_URL (runtime injection uchun)
-// 3. Codespaces avtomatik aniqlash
-// 4. Default localhost
+// 1. Codespaces avtomatik aniqlash (BIRINCHI - eng muhim)
+// 2. Environment variable (VITE_API_URL) - faqat to'ldirilgan bo'lsa
+// 3. Default localhost
 const getApiUrl = () => {
-  // Vite environment variable
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-
-  // Runtime injection (Codespaces uchun)
-  if (typeof window !== 'undefined' && window.API_URL) {
-    return window.API_URL;
-  }
-
-  // Codespaces avtomatik aniqlash (github.dev yoki preview.app.github.dev)
+  // BIRINCHI: Codespaces avtomatik aniqlash
+  // Bu eng ishonchli usul - brauzer hostname'dan aniqlaydi
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
     
     // GitHub Codespaces formatlarini tekshirish
-    // Format 1: codespace-name-5173.app.github.dev
-    // Format 2: codespace-name-5173.preview.app.github.dev
     if (hostname.includes('.app.github.dev') || hostname.includes('.github.dev')) {
       // Portni 8000 ga almashtirish (5173, 3000, va boshqa portlar uchun)
       const backendHostname = hostname.replace(/-\d+\./, '-8000.');
+      console.log('[API] Codespaces aniqlandi, backend URL:', `https://${backendHostname}`);
       return `https://${backendHostname}`;
     }
   }
 
-  // Default localhost
+  // IKKINCHI: Vite environment variable (faqat localhost bo'lmasa)
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && envUrl.trim() !== '' && !envUrl.includes('localhost')) {
+    console.log('[API] Environment variable ishlatilmoqda:', envUrl);
+    return envUrl;
+  }
+
+  // DEFAULT: Localhost (mahalliy development uchun)
+  console.log('[API] Default localhost ishlatilmoqda');
   return 'http://localhost:8000';
 };
 
