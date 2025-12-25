@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCourses, API_URL, getAuthHeaders } from '../../api';
+import { getCourses, getCourseAssignments, getAssignmentSubmissions } from '../../api';
 import { ROUTES, createRoute } from '../../routes';
 import {
   Card,
@@ -50,10 +50,7 @@ export default function ViewSubmissionsPage() {
 
   const loadAssignments = async (courseId) => {
     try {
-      const res = await fetch(`http://localhost:8000/assignments/course/${courseId}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
+      const data = await getCourseAssignments(courseId);
       setAssignments(data);
     } catch (err) {
       message.error(err.message);
@@ -62,10 +59,7 @@ export default function ViewSubmissionsPage() {
 
   const loadSubmissions = async (assignmentId) => {
     try {
-      const res = await fetch(`http://localhost:8000/submissions/assignment/${assignmentId}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
+      const data = await getAssignmentSubmissions(assignmentId);
       setSubmissions(data);
     } catch (err) {
       message.error(err.message);

@@ -1,7 +1,8 @@
 // API Configuration
 // Codespaces va lokal muhit uchun avtomatik ishlaydi
+// API_URL client.js dan olinadi (codespaces avtomatik aniqlash bilan)
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+export { API_URL } from '../api/client';
 
 // API endpoints
 export const API_ENDPOINTS = {

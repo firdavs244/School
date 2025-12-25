@@ -31,22 +31,12 @@ export default function CreateAssignmentPage() {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/assignments/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          title: values.title,
-          description: values.description,
-          course_id: parseInt(values.course_id),
-          due_date: values.due_date ? values.due_date.toISOString() : null
-        })
+      await createAssignment({
+        title: values.title,
+        description: values.description,
+        course_id: parseInt(values.course_id),
+        due_date: values.due_date ? values.due_date.toISOString() : null
       });
-
-      if (!res.ok) throw new Error('Topshiriq yaratishda xatolik');
-
       message.success('Topshiriq muvaffaqiyatli yaratildi!');
       navigate('/dashboard');
     } catch (err) {

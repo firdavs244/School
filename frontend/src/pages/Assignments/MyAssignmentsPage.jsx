@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMyCourses, API_URL, getAuthHeaders } from '../../api';
+import { getMyCourses, getCourseAssignments } from '../../api';
 import { ROUTES, createRoute } from '../../routes';
 import { isOverdue, getDaysUntilDue, formatDate } from '../../utils';
 import {
@@ -40,18 +40,15 @@ export default function MyAssignmentsPage() {
 
       const allAssignments = [];
       for (const enrollment of courses) {
-        const res = await fetch(`http://localhost:8000/assignments/course/${enrollment.course_id}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-
-        if (res.ok) {
-          const courseAssignments = await res.json();
+        try {
+          const courseAssignments = await getCourseAssignments(enrollment.course_id);
           allAssignments.push(...courseAssignments.map(a => ({
             ...a,
             courseName: enrollment.course?.title || 'Kurs'
           })));
+        } catch (err) {
+          // Kurs topshiriqlarini olishda xatolik bo'lsa, o'tkazib yuborish
+          console.error(`Kurs ${enrollment.course_id} topshiriqlarini olishda xatolik:`, err);
         }
       }
 

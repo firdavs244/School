@@ -47,8 +47,8 @@ export default function ManageUsersPage() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/users/', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      const res = await fetch(`${API_URL}/users/`, {
+        headers: getAuthHeaders()
       });
       const data = await res.json();
       setUsers(data);
@@ -71,9 +71,9 @@ export default function ManageUsersPage() {
 
   const handleDelete = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:8000/users/${userId}`, {
+      const res = await fetch(`${API_URL}/users/${userId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: getAuthHeaders()
       });
 
       if (res.ok) {
@@ -90,14 +90,14 @@ export default function ManageUsersPage() {
   const handleSubmit = async (values) => {
     try {
       const url = editingUser
-        ? `http://localhost:8000/users/${editingUser.id}`
-        : 'http://localhost:8000/users/register';
+        ? `${API_URL}/users/${editingUser.id}`
+        : `${API_URL}/users/register`;
 
       const res = await fetch(url, {
         method: editingUser ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...getAuthHeaders()
         },
         body: JSON.stringify(values)
       });

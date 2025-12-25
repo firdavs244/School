@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCourses, createCourse, API_URL, getAuthHeaders } from '../../api';
+import { getCourses, createCourse, updateCourse, deleteCourse } from '../../api';
 import { ROUTES } from '../../routes';
 import {
   Table,
@@ -44,10 +44,7 @@ export default function ManageCoursesPage() {
   const loadCourses = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/courses/', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
+      const data = await getCourses();
       setCourses(data);
     } catch (err) {
       message.error('Kurslarni yuklashda xatolik');
@@ -67,17 +64,9 @@ export default function ManageCoursesPage() {
 
   const handleDelete = async (courseId) => {
     try {
-      const res = await fetch(`http://localhost:8000/courses/${courseId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-
-      if (res.ok) {
-        message.success('Kurs o\'chirildi');
-        loadCourses();
-      } else {
-        message.error('O\'chirishda xatolik');
-      }
+      await deleteCourse(courseId);
+      message.success('Kurs o\'chirildi');
+      loadCourses();
     } catch (err) {
       message.error('O\'chirishda xatolik');
     }
@@ -85,31 +74,23 @@ export default function ManageCoursesPage() {
 
   const handleSubmit = async (values) => {
     try {
-      const url = editingCourse
-        ? `http://localhost:8000/courses/${editingCourse.id}`
-        : 'http://localhost:8000/courses/';
+      const courseData = {
+        ...values,
+        teacher_id: editingCourse?.teacher_id || parseInt(localStorage.getItem('user_id'))
+      };
 
-      const res = await fetch(url, {
-        method: editingCourse ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          ...values,
-          teacher_id: editingCourse?.teacher_id || parseInt(localStorage.getItem('user_id'))
-        })
-      });
-
-      if (res.ok) {
-        message.success(editingCourse ? 'Kurs yangilandi' : 'Kurs yaratildi');
-        setModalVisible(false);
-        form.resetFields();
-        setEditingCourse(null);
-        loadCourses();
+      if (editingCourse) {
+        await updateCourse(editingCourse.id, courseData);
+        message.success('Kurs yangilandi');
       } else {
-        message.error('Xatolik yuz berdi');
+        await createCourse(courseData);
+        message.success('Kurs yaratildi');
       }
+
+      setModalVisible(false);
+      form.resetFields();
+      setEditingCourse(null);
+      loadCourses();
     } catch (err) {
       message.error('Xatolik yuz berdi');
     }

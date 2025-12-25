@@ -20,10 +20,7 @@ export default function GradeSubmissionPage() {
 
   const loadSubmission = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/submissions/${submissionId}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
+      const data = await getSubmission(submissionId);
       setSubmission(data);
     } catch (err) {
       message.error(err.message);
@@ -40,17 +37,7 @@ export default function GradeSubmissionPage() {
         feedback: values.feedback
       };
 
-      const res = await fetch('http://localhost:8000/grades/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(gradeData)
-      });
-
-      if (!res.ok) throw new Error('Baho berishda xatolik');
-
+      await createGrade(gradeData);
       message.success('Baho muvaffaqiyatli berildi!');
       navigate('/view-submissions');
     } catch (err) {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCourses, API_URL, getAuthHeaders } from '../../api';
+import { getCourses, getCourseAssignments, createAssignment, updateAssignment, deleteAssignment } from '../../api';
 import { ROUTES } from '../../routes';
 import {
   Table,
@@ -56,10 +56,7 @@ export default function ManageAssignmentsPage() {
   const loadAssignments = async (courseId) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8000/assignments/course/${courseId}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await res.json();
+      const data = await getCourseAssignments(courseId);
       setAssignments(data);
     } catch (err) {
       message.error('Topshiriqlarni yuklashda xatolik');
@@ -90,15 +87,9 @@ export default function ManageAssignmentsPage() {
 
   const handleDelete = async (assignmentId) => {
     try {
-      const res = await fetch(`http://localhost:8000/assignments/${assignmentId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-
-      if (res.ok) {
-        message.success('Topshiriq o\'chirildi');
-        loadAssignments(selectedCourse);
-      }
+      await deleteAssignment(assignmentId);
+      message.success('Topshiriq o\'chirildi');
+      loadAssignments(selectedCourse);
     } catch (err) {
       message.error('O\'chirishda xatolik');
     }
@@ -106,30 +97,24 @@ export default function ManageAssignmentsPage() {
 
   const handleSubmit = async (values) => {
     try {
-      const url = editingAssignment
-        ? `http://localhost:8000/assignments/${editingAssignment.id}`
-        : 'http://localhost:8000/assignments/';
+      const assignmentData = {
+        ...values,
+        course_id: parseInt(values.course_id),
+        due_date: values.due_date ? values.due_date.toISOString() : null
+      };
 
-      const res = await fetch(url, {
-        method: editingAssignment ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          ...values,
-          course_id: parseInt(values.course_id),
-          due_date: values.due_date ? values.due_date.toISOString() : null
-        })
-      });
-
-      if (res.ok) {
-        message.success(editingAssignment ? 'Yangilandi' : 'Yaratildi');
-        setModalVisible(false);
-        form.resetFields();
-        setEditingAssignment(null);
-        if (selectedCourse) loadAssignments(selectedCourse);
+      if (editingAssignment) {
+        await updateAssignment(editingAssignment.id, assignmentData);
+        message.success('Yangilandi');
+      } else {
+        await createAssignment(assignmentData);
+        message.success('Yaratildi');
       }
+
+      setModalVisible(false);
+      form.resetFields();
+      setEditingAssignment(null);
+      if (selectedCourse) loadAssignments(selectedCourse);
     } catch (err) {
       message.error('Xatolik yuz berdi');
     }

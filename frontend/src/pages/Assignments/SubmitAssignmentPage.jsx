@@ -21,15 +21,7 @@ export default function SubmitAssignmentPage() {
 
   const loadAssignment = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/assignments/${assignmentId}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!res.ok) throw new Error('Topshiriq topilmadi');
-
-      const data = await res.json();
+      const data = await getAssignment(assignmentId);
       setAssignment(data);
     } catch (err) {
       message.error(err.message);
@@ -39,20 +31,10 @@ export default function SubmitAssignmentPage() {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/submissions/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          assignment_id: parseInt(assignmentId),
-          content: values.content
-        })
+      await submitAssignment({
+        assignment_id: parseInt(assignmentId),
+        content: values.content
       });
-
-      if (!res.ok) throw new Error('Topshirishda xatolik');
-
       message.success('Topshiriq muvaffaqiyatli topshirildi!');
       navigate('/my-assignments');
     } catch (err) {

@@ -37,15 +37,7 @@ export default function MyGradesPage() {
 
   const loadGrades = async () => {
     try {
-      const res = await fetch('http://localhost:8000/grades/my-grades', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!res.ok) throw new Error('Baholarni yuklashda xatolik');
-
-      const data = await res.json();
+      const data = await getMyGrades();
       setGrades(data);
     } catch (err) {
       message.error(err.message);
